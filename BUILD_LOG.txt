@@ -1,0 +1,171 @@
+1. Check the repo dependency files (`requirements.txt`, `extra_requirements.txt`, `setup.py`, `environment.yml`)
+Here’s the analysis of Step 1 based on your output:
+
+**Dependencies found:**
+
+* **Python packages (`requirements.txt`)**
+  `jams, librosa, matplotlib, museval, musdb, pyyaml, zarr, ffmpy, torch, pytorch-ignite, tensorboard, norbert, tqdm, termtables, gpytorch, ffmpeg-python, importlib_resources, sox, pyloudnorm, soxbindings>=1.2.2 (non-Windows)`
+
+* **Optional / extra packages (`extra_requirements.txt`)**
+  `sphinx==2.4.4, sphinx-rtd-theme, sphinx-autoapi, m2r2, autodocsumm, jupytext, nbsphinx, pytest, pytest-cov, IPython, ffmpy, scaper, tqdm, termtables, jupyter, jupyter_contrib_nbextensions, jupyter_nbextensions_configurator, gradio`
+
+* **Setup metadata (`setup.py`)**
+
+  * Main install: `install_requires=requirements` → installs the packages in `requirements.txt`
+  * Extras: `'melodia': ['vamp']` and `'extras': extra_requirements`
+  * Target Python: 3.7 (but it may work on 3.8–3.11 with care)
+
+* **System dependencies**
+
+  * Needed for NUSSL operation (not in pip): `ffmpeg`, `sox`
+
+* **Environment file (`environment.yml`)**
+
+  * **Not present**, so no ready-made conda environment
+
+**Implications for Step 2 onward:**
+
+* You will need to create a **fresh Python virtual environment**.
+* Install **Python dependencies carefully**, paying attention to versions compatible with your Python (3.11+ on Arch may require older NumPy / SciPy for NUSSL).
+* Install **system tools** (`ffmpeg`, `sox`) outside Python.
+* Then install NUSSL **from source** with `pip install -e .`.
+* After successful install, verify the library works and optionally lock versions.
+
+This sets us up to start Step 2 with a clean venv.
+
+2. Create a clean virtual environment
+
+[zombi3:nussl ((HEAD detached at v1.1.9)) 14:07]$ python3.11 -m venv venv
+[zombi3:nussl ((HEAD detached at v1.1.9)) 14:07]$ source venv/bin/activate
+(venv) [zombi3:nussl ((HEAD detached at v1.1.9)) 14:07]$ pip install --upgrade pip
+Requirement already satisfied: pip in ./venv/lib/python3.11/site-packages (24.0)
+Collecting pip
+  Using cached pip-25.3-py3-none-any.whl.metadata (4.7 kB)
+Using cached pip-25.3-py3-none-any.whl (1.8 MB)
+Installing collected packages: pip
+  Attempting uninstall: pip
+    Found existing installation: pip 24.0
+    Uninstalling pip-24.0:
+      Successfully uninstalled pip-24.0
+Successfully installed pip-25.3
+(venv) [zombi3:nussl ((HEAD detached at v1.1.9)) 14:07]$
+
+3. Install Python dependencies with compatible versions
+
+(venv) [zombi3:nussl ((HEAD detached at v1.1.9)) 14:07]$ pip install -r requirements.txt
+Successfully installed absl-py-0.12.0 appdirs-1.4.4 asciitree-0.3.3 attrs-20.3.0 audioread-2.1.9 cached-property-1.5.2 cachetools-4.2.4 certifi-2020.12.5 cffi-1.14.5 chardet-4.0.0 charset-normalizer-1.3.6 cycler-0.10.0 decorator-4.4.2 dragonmapper-0.2.7 fasteners-0.16 ffmpeg-python-0.2.0 ffmpy-0.3.0 filelock-3.0.12 fonttools-4.22.0 fsspec-0.8.7 future-0.18.0 google-auth-1.35.0 google-auth-oauthlib-0.4.6 gpytorch-1.4.0 grpcio-1.37.0rc1 hanzidentifier-1.3.0 idna-2.10 importlib-metadata-3.10.0 importlib-resources-5.1.2 jams-0.3.4 jinja2-2.11.3 joblib-1.0.1 jsonschema-3.2.0 kiwisolver-1.3.1 librosa-0.8.0 llvmlite-0.36.0 loguru-0.5.3 markdown-3.3.4 markupsafe-2.0.0rc1 matplotlib-3.4.1 mir-eval-0.6 mpmath-1.2.1 msgpack-1.0.2 musdb-0.4.0 museval-0.4.0 networkx-2.5 norbert-0.2.1 numba-0.53.1 numcodecs-0.7.3 numpy-1.20.2 oauthlib-3.3.1 packaging-20.9 pandas-1.2.3 pillow-8.2.0 pooch-1.3.0 prettytable-2.5.0 protobuf-3.15.6 pyaml-20.4.0 pyasn1-0.6.1 pyasn1-modules-0.4.2 pycparser-2.20 pyloudnorm-0.1.0 pyparsing-3.0.0b2 pyrsistent-0.20.0 python-dateutil-2.8.1 pytorch-ignite-0.5.0.dev20210401 pytz-2021.1 pyyaml-5.4.1 requests-2.25.1 requests-oauthlib-2.0.0 resampy-0.4.3 rsa-4.9.1 scikit-learn-0.24.1 scipy-1.6.2 simplejson-3.17.2 six-1.15.0 sortedcontainers-2.3.0 soundfile-0.10.3.post1 sox-1.4.0 soxbindings-1.2.3 stempeg-0.2.3 sympy-1.7.1 tensorboard-2.4.1 tensorboard-data-server-0.6.0 tensorboard-plugin-wit-1.8.1 termtables-0.2.3 threadpoolctl-2.1.0 torch-1.8.1 tqdm-4.59.0 typeguard-2.12.0 typing-extensions-3.7.4.3 tzdata-2021.1 urllib3-1.26.4 wcwidth-0.2.5 werkzeug-1.0.1 wheel-0.45.1 zarr-2.7.0 zhon-2.1.1 zipp-3.4.1
+
+(venv) [zombi3:nussl ((HEAD detached at v1.1.9)) 14:10]$ pip install -r extra_requirements.txt
+Successfully installed Flask-1.1.4 Flask-BasicAuth-0.2.0 Flask-Cors-6.0.2 PyWavelets-1.4.1 aiofiles-0.6.0 alabaster-0.7.12 analytics-python-1.4.post1 anyio-3.0.0rc3 argon2-cffi-20.1.0 arrow-1.0.3 astroid-2.5.2 asttokens-2.0.4 async-generator-1.10 async-lru-1.0.2 autodocsumm-0.2.2 babel-2.9.0 backcall-0.2.0 backoff-1.10.0 bcrypt-5.0.0 beautifulsoup4-4.9.3 bleach-6.2.0 click-7.1.2 colorama-0.4.6 comm-0.0.1 commonmark-0.9.1 coverage-7.10.7 cryptography-45.0.7 debugpy-1.2.1 defusedxml-0.7.1 docutils-0.17b1 entrypoints-0.4 exceptiongroup-0.0.0a0 executing-0.5.4 fastapi-0.63.0 fastjsonschema-2.15.0 flask-cachebuster-1.0.0 fqdn-1.5.1 gradio-1.6.4 h11-0.12.0 httpcore-0.12.3 httpx-0.17.1 huggingface-hub-0.0.7 imageio-2.9.0 imagesize-1.2.0 iniconfig-1.1.1 invoke-2.2.1 ipykernel-6.0.0a2 ipython-7.22.0 ipython-genutils-0.2.0 ipython_pygments_lexers-1.1.1 ipywidgets-8.0.0a4 isoduration-20.11.0 itsdangerous-1.1.0 jedi-0.18.0 json5-0.9.5 jsonpointer-2.1 jupyter-1.0.0 jupyter-client-6.1.12 jupyter-console-6.4.0 jupyter-contrib-core-0.3.3 jupyter-contrib-nbextensions-0.5.1 jupyter-core-4.7.1 jupyter-highlight-selected-word-0.2.0 jupyter-latex-envs-1.4.6 jupyter-lsp-1.1.4 jupyter-nbextensions-configurator-0.4.1 jupyter-server-1.5.1 jupyterlab-2.3.1 jupyterlab-pygments-0.1.2 jupyterlab-server-1.2.0 jupyterlab-widgets-2.0.0a1 jupytext-1.11.1 lark-0.11.1 lazy-object-proxy-1.12.0 lxml-4.6.3 m2r2-0.2.7 markdown-it-py-0.6.0 markdown2-2.5.4 matplotlib-inline-0.1.0 mdit-py-plugins-0.2.6 mistune-0.8.4 monotonic-1.6 nbclient-0.5.3 nbconvert-6.0.7 nbformat-5.1.2 nbsphinx-0.8.2 nest-asyncio-1.5.1 notebook-6.3.0 notebook-shim-0.0.5 orjson-3.5.1 outcome-1.3.0.post0 overrides-3.1.0 pandocfilters-1.4.3 paramiko-4.0.0 parso-0.8.2 pexpect-4.8.0 pickleshare-0.7.5 pluggy-1.0.0.dev0 prometheus-client-0.9.0 prompt-toolkit-3.0.18 psutil-5.8.0 ptyprocess-0.7.0 pure-eval-0.2.1 py-1.11.0 pydantic-1.8.1 pydub-0.25.1 pygments-2.8.1 pynacl-1.6.0 pytest-6.2.2 pytest-cov-2.11.1 python-json-logger-2.0.1 python-multipart-0.0.5 pyzmq-22.0.3 qtconsole-5.7.0 qtpy-2.4.3 rfc3339-validator-0.1.3 rfc3986-1.5.0 rfc3986-validator-0.1.1 rich-10.0.1 scaper-1.6.5rc0 scikit-image-0.19.3 semantic-version-2.8.5 send2trash-1.6.0b1 shellingham-1.4.0 sniffio-1.3.1 snowballstemmer-2.1.0 soupsieve-2.2.1 sphinx-3.5.3 sphinx-autoapi-1.7.0 sphinx-rtd-theme-0.5.1 sphinxcontrib-applehelp-1.0.2 sphinxcontrib-devhelp-1.0.2 sphinxcontrib-htmlhelp-1.0.3 sphinxcontrib-jsmath-1.0.1 sphinxcontrib-qthelp-1.0.3 sphinxcontrib-serializinghtml-1.1.4 stack-data-0.1.0 starlette-0.13.6 stdlib-list-0.8.0 terminado-0.9.4 testpath-0.6.0 tifffile-2024.8.30 tinycss2-1.1.0 toml-0.10.2 tomlkit-0.7.0 tornado-6.1 traitlets-5.0.5 trio-0.24.0 unidecode-1.4.0 uri-template-1.1.0 uvicorn-0.13.4 webcolors-1.11.1 webencodings-0.5.1 websocket-client-0.58.0 websockets-8.1 widgetsnbextension-4.0.0a2 wrapt-1.12.1
+
+
+4. Install system dependencies (`ffmpeg`, `sox`)
+
+[zombi3:audio 14:11]$ pacman -Qi sox ffmpeg
+Name            : sox
+Version         : 14.7.0.4-1
+Description     : The Swiss Army knife of sound processing tools
+Architecture    : x86_64
+URL             : https://codeberg.org/sox_ng/sox_ng/
+Licenses        : GPL-2.0-only
+Groups          : None
+Provides        : libsox.so  libsox_ng.so=3-64
+Depends On      : glibc  ffmpeg  file  gcc-libs  gsm  libao  libid3tag  libltdl  libmad  libpng
+                  opusfile  twolame  wavpack  zlib
+Optional Deps   : alsa-lib: alsa plugin [installed]
+                  flac: flac plugin [installed]
+                  fftw: fftw support [installed]
+                  lame: mp3 plugin [installed]
+                  libpulse: pulse plugin [installed]
+                  libsndfile: caf, fap, mat4, mat5, paf, pvf, sd2, sndfile, w64 and xi plugins
+                  [installed]
+                  libvorbis: vorbis plugin [installed]
+                  libogg: ogg plugin [installed]
+                  opencore-amr: amr_nb and amr_wb plugins [installed]
+                  speexdsp: speexdsp plugin/effect [installed]
+Required By     : None
+Optional For    : None
+Conflicts With  : None
+Replaces        : None
+Installed Size  : 1152.41 KiB
+Packager        : George Rawlinson <grawlinson@archlinux.org>
+Build Date      : Wed 14 Jan 2026 03:23:42 AM EET
+Install Date    : Thu 15 Jan 2026 11:02:14 AM EET
+Install Reason  : Explicitly installed
+Install Script  : No
+Validated By    : Signature
+
+Name            : ffmpeg
+Version         : 2:8.0.1-2
+Description     : Complete solution to record, convert and stream audio and video
+Architecture    : x86_64
+URL             : https://ffmpeg.org
+Licenses        : GPL-3.0-only
+Groups          : None
+Provides        : libavcodec.so=62-64  libavdevice.so=62-64  libavfilter.so=11-64  libavformat.so=62-64
+                  libavutil.so=60-64  libswresample.so=6-64  libswscale.so=9-64
+Depends On      : alsa-lib  aom  bzip2  cairo  dav1d  fontconfig  freetype2  fribidi  glib2  glibc
+                  glslang  gmp  gnutls  gsm  harfbuzz  jack  lame  libass  libavc1394  libbluray
+                  libbs2b  libdrm  libdvdnav  libdvdread  libgl  libiec61883  libjxl  libmodplug
+                  libopenmpt  libplacebo  libpulse  libraw1394  librsvg  libsoxr  libssh  libtheora
+                  libva  libvdpau  libvorbis  libvpx  libwebp  libx11  libxcb  libxext  libxml2  libxv
+                  ocl-icd  onevpl  opencore-amr  openjpeg2  opus  rav1e  rubberband  sdl2  snappy
+                  speex  srt  svt-av1  v4l-utils  vapoursynth  vid.stab  vmaf  vulkan-icd-loader  x264
+                  x265  xvidcore  xz  zeromq  zimg  zlib  libass.so=9-64  libbluray.so=3-64
+                  libbs2b.so=0-64  libdav1d.so=7-64  libfreetype.so=6-64  libharfbuzz.so=0-64
+                  libjxl.so=0.11-64  libopenmpt.so=0-64  libplacebo.so=351-64  librav1e.so=0.8-64
+                  librsvg-2.so=2-64  librubberband.so=3-64  libva.so=2-64  libva-drm.so=2-64
+                  libva-x11.so=2-64  libvidstab.so=1.2-64  libvorbisenc.so=2-64  libvorbis.so=0-64
+                  libvpx.so=11-64  libx264.so=165-64  libx265.so=215-64  libxvidcore.so=4-64
+                  libzimg.so=2-64  libzmq.so=5-64
+Optional Deps   : avisynthplus: AviSynthPlus support
+                  frei0r-plugins: Frei0r video effects support
+                  intel-media-sdk: Intel QuickSync support (legacy)
+                  ladspa: LADSPA filters
+                  nvidia-utils: Nvidia NVDEC/NVENC support
+                  onevpl-intel-gpu: Intel QuickSync support
+Required By     : chromaprint  firefox  gst-libav  obs-studio  opencv  sox  thunderbird
+Optional For    : audacity  gegl  libde265  libheif  python-matplotlib  vtk
+Conflicts With  : None
+Replaces        : None
+Installed Size  : 46.51 MiB
+Packager        : Robin Candau <antiz@archlinux.org>
+Build Date      : Wed 10 Dec 2025 01:14:44 AM EET
+Install Date    : Sun 14 Dec 2025 09:56:02 AM EET
+Install Reason  : Installed as a dependency for another package
+Install Script  : No
+Validated By    : Signature
+
+5. Install NUSSL from source (`pip install -e .`)
+
+Successfully built nussl
+Installing collected packages: nussl
+Successfully installed nussl-1.1.9
+
+6. Verify the install
+
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:21]$ python - <<'EOF'
+import nussl
+print(nussl.__version__)
+EOF
+
+1.1.9
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:22]$
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:22]$
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:22]$ python - <<'EOF'
+import nussl
+from nussl import AudioSignal
+sig = AudioSignal()
+print("AudioSignal OK")
+EOF
+AudioSignal OK
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:22]$ python - <<'EOF'
+from nussl.separation.base import MaskSeparationBase
+print("MaskSeparationBase OK")
+EOF
+MaskSeparationBase OK
+
+7. Optionally lock exact versions with `pip freeze`
+
+(venv) [zombi3:nussl ((HEAD detached from v1.1.9)) 16:24]$ pip freeze > requirements.lock.txt
+
